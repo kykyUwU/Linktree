@@ -1,0 +1,8 @@
+// Configuration Cloudflare : site statique servi tel quel
+{
+  "name": "kykyuwu",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./"
+  }
+}
