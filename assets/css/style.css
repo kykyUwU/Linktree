@@ -132,6 +132,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
   width: 36px; height: 36px; border-radius: 50%;
 }
 .controls button:hover { opacity: 1; background: var(--panel-2); }
+.controls button { display: inline-grid; place-items: center; }
+.controls button svg { width: 16px; height: 16px; }
+.controls .play svg { width: 18px; height: 18px; }
 .controls .play { width: 44px; height: 44px; background: var(--grad); opacity: 1; color: var(--on-accent); }
 .player.empty .controls, .player.empty .seek, .player.empty .times, .player.empty input { opacity: .35; pointer-events: none; }
 

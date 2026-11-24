@@ -106,6 +106,7 @@
   }
 
   /* ===== Lecteur ===== */
+  document.querySelectorAll("#player [data-icon]").forEach((n) => (n.innerHTML = ICONS[n.dataset.icon]));
   const audio = $("#audio"), player = $("#player"), playBtn = $("#playBtn");
   const tracks = SITE.music || [];
   let idx = 0;
@@ -158,8 +159,8 @@
   $("#prevBtn").addEventListener("click", () => load(idx - 1, true));
   $("#nextBtn").addEventListener("click", () => load(idx + 1, true));
   audio.addEventListener("ended", () => load(idx + 1, true));
-  audio.addEventListener("play", () => { player.classList.add("playing"); playBtn.textContent = "⏸"; });
-  audio.addEventListener("pause", () => { player.classList.remove("playing"); playBtn.textContent = "▶"; });
+  audio.addEventListener("play", () => { player.classList.add("playing"); playBtn.innerHTML = ICONS.pause; });
+  audio.addEventListener("pause", () => { player.classList.remove("playing"); playBtn.innerHTML = ICONS.play; });
   const seek = $("#seek");
   let seeking = false;
   const paintRange = (r) => r.style.setProperty("--p", (r.value / r.max) * 100 + "%");
