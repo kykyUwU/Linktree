@@ -141,6 +141,7 @@
     // Écran "Click to open" : ce clic autorise le navigateur à lancer la musique
     const splash = $("#splash");
     if (splash) {
+      if (matchMedia("(pointer: coarse)").matches) splash.querySelector("p").textContent = "Tap to open";
       const open = (e) => {
         if (e.type === "keydown" && e.key === "Tab") return;
         audio.play().catch(() => {});
@@ -185,6 +186,10 @@
   const mobile = () => matchMedia("(max-width: 860px)").matches;
   const setMenu = (open) => { document.body.classList.toggle("nav-open", open); menuBtn.setAttribute("aria-expanded", open); };
   menuBtn.addEventListener("click", () => setMenu(!document.body.classList.contains("nav-open")));
+  // Sur téléphone : toucher à côté de la barre la referme
+  document.addEventListener("pointerdown", (e) => {
+    if (mobile() && document.body.classList.contains("nav-open") && !e.target.closest("#sidebar, #menuBtn")) setMenu(false);
+  });
   setMenu(!mobile()); // ouverte sur ordi, fermée sur téléphone
   requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.remove("no-anim")));
 
