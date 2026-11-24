@@ -58,6 +58,9 @@ out = home
 # Pas de bouton "version hors ligne" dans la version hors ligne
 out = re.sub(r"\s*<!-- offline-btn -->.*?<!-- /offline-btn -->", "", out, flags=re.S)
 
+# Pas de statistiques dans la version hors ligne
+out = re.sub(r"\s*<!-- Cloudflare Web Analytics -->.*?<!-- End Cloudflare Web Analytics -->", "", out, flags=re.S)
+
 # CSS en ligne
 def inline_css(m):
     return "<style>\n" + read(m.group(1).lstrip("/")) + "\n</style>"
