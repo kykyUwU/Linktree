@@ -10,13 +10,20 @@
   const BG = (css.getPropertyValue("--bg") || "#000").trim();
   const fx = (a) => `rgba(${FX}, ${a})`;
 
-  function resize() {
-    dpr = 1; // fond décoratif : pas besoin de haute résolution
-    W = innerWidth; H = innerHeight;
+  // Ne relance l'animation que si la largeur change (rotation, fenêtre redimensionnée).
+  // Sur mobile, la barre d'adresse qui apparaît/disparaît au scroll change seulement la hauteur :
+  // le canvas est déjà assez haut pour couvrir les deux cas, donc rien ne se réinitialise.
+  let rt = 0;
+  function resize(force) {
+    const w = innerWidth, h = Math.max(innerHeight, screen.height || 0);
+    if (!force && w === W && h <= H) return;
+    W = w; H = Math.max(h, force ? 0 : H);
     cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (mode) init[mode]();
   }
+  const onResize = () => { clearTimeout(rt); rt = setTimeout(() => resize(false), 150); };
 
   /* ---------- Matrix ---------- */
   const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -156,14 +163,14 @@
     if (m !== "neutral") raf = requestAnimationFrame(loop);
   }
 
-  addEventListener("resize", resize);
+  addEventListener("resize", onResize);
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) cancelAnimationFrame(raf);
     else if (mode !== "neutral") raf = requestAnimationFrame(loop);
   });
   document.querySelectorAll(".bg-switch button").forEach((b) => b.addEventListener("click", () => set(b.dataset.bg)));
 
-  resize();
+  resize(true);
   let saved = null;
   try { saved = localStorage.getItem("bg"); } catch {}
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;

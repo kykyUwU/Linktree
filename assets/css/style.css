@@ -90,7 +90,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .lang-switch button.active { background: var(--grad); border-color: transparent; color: var(--on-accent); font-weight: 600; }
 
-#bgCanvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; }
+#bgCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100lvh; z-index: -2; pointer-events: none; }
 .bg-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .bg-switch button {
   padding: 8px 4px; border-radius: 10px; font-size: .78rem; white-space: nowrap;
