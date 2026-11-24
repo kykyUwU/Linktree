@@ -4,7 +4,9 @@
   const ctx = cv.getContext("2d");
   let W = 0, H = 0, dpr = 1, raf = 0, mode = null, state = {};
   const css = getComputedStyle(document.documentElement);
-  const FX = (css.getPropertyValue("--fx") || "255,255,255").trim();
+  const readFx = () => (getComputedStyle(document.body).getPropertyValue("--fx") || "255,255,255").trim();
+  let FX = readFx();
+  document.addEventListener("themechange", () => { FX = readFx(); });
   const BG = (css.getPropertyValue("--bg") || "#000").trim();
   const fx = (a) => `rgba(${FX}, ${a})`;
 

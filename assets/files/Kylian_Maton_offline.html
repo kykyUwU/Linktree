@@ -343,6 +343,30 @@ body.normal .controls button { border-radius: 50% !important; }
 .side-dl:hover { background: var(--panel-2); border-color: var(--text); }
 .side-dl small { color: var(--muted); font-size: .75rem; }
 
+/* Écran d'ouverture "Click to open" */
+.splash {
+  position: fixed; inset: 0; z-index: 200; background: #000; color: var(--text);
+  display: grid; place-items: center; cursor: pointer; transition: opacity .4s;
+}
+.splash p { margin: 0; font-size: 2rem; letter-spacing: .08em; }
+.splash p::after { content: "_"; margin-left: 4px; animation: blink 1s steps(1) infinite; }
+.splash:focus { outline: none; }
+.splash.hide { opacity: 0; pointer-events: none; }
+body.normal .splash p::after { content: none; }
+@media print { .splash { display: none !important; } }
+
+/* ===== Thème vert ===== */
+body.green {
+  --text: #39ff7a;
+  --muted: #1fa851;
+  --accent: #39ff7a;
+  --accent-2: #39ff7a;
+  --border: rgba(57, 255, 122, 0.22);
+  --fx: 57, 255, 122;
+  --grad: linear-gradient(135deg, #39ff7a, #39ff7a);
+  color: var(--text);
+}
+
 </style>
   <style>
 /* ===== Page CV ===== */
@@ -428,7 +452,8 @@ body.normal .controls button { border-radius: 50% !important; }
 </style>
 </head>
 <body class="no-anim">
-  <script>if (!matchMedia("(max-width: 860px)").matches) document.body.classList.add("nav-open"); try { if (localStorage.getItem("style") === "normal") document.body.classList.add("normal"); } catch (e) {}</script>
+  <script>if (!matchMedia("(max-width: 860px)").matches) document.body.classList.add("nav-open"); try { if (localStorage.getItem("style") === "normal") document.body.classList.add("normal"); if (localStorage.getItem("theme") === "green") document.body.classList.add("green"); } catch (e) {}</script>
+  <div id="splash" class="splash" role="button" tabindex="0"><p>Click to open</p></div>
   <canvas id="bgCanvas" aria-hidden="true"></canvas>
   <div class="bg-glow" aria-hidden="true"></div>
 
@@ -459,6 +484,15 @@ body.normal .controls button { border-radius: 50% !important; }
       <div class="lang-switch style-switch" role="group">
         <button data-style="term" data-i18n="style.term"></button>
         <button data-style="normal" data-i18n="style.normal"></button>
+      </div>
+    </div>
+
+    <!-- Thème -->
+    <div class="side-block">
+      <p class="side-title" data-i18n="side.theme"></p>
+      <div class="lang-switch theme-switch" role="group">
+        <button data-theme="white" data-i18n="theme.white"></button>
+        <button data-theme="green" data-i18n="theme.green"></button>
       </div>
     </div>
 
@@ -558,6 +592,9 @@ const SITE = {
       "side.music": "Musique",
       "side.bg": "Fond",
       "side.style": "Style",
+      "side.theme": "Thème",
+      "theme.white": "Blanc",
+      "theme.green": "Vert",
       "side.offline": "Version hors ligne",
       "side.offlineSub": "Tout le site en un fichier",
       "style.term": "Terminal",
@@ -594,6 +631,9 @@ const SITE = {
       "side.music": "Music",
       "side.bg": "Background",
       "side.style": "Style",
+      "side.theme": "Theme",
+      "theme.white": "White",
+      "theme.green": "Green",
       "side.offline": "Offline version",
       "side.offlineSub": "The whole site in one file",
       "style.term": "Terminal",
@@ -776,7 +816,9 @@ const ICONS = {
   const ctx = cv.getContext("2d");
   let W = 0, H = 0, dpr = 1, raf = 0, mode = null, state = {};
   const css = getComputedStyle(document.documentElement);
-  const FX = (css.getPropertyValue("--fx") || "255,255,255").trim();
+  const readFx = () => (getComputedStyle(document.body).getPropertyValue("--fx") || "255,255,255").trim();
+  let FX = readFx();
+  document.addEventListener("themechange", () => { FX = readFx(); });
   const BG = (css.getPropertyValue("--bg") || "#000").trim();
   const fx = (a) => `rgba(${FX}, ${a})`;
 
@@ -1109,6 +1151,17 @@ const ICONS = {
   styleBtns.forEach((b) => b.addEventListener("click", () => setStyle(b.dataset.style)));
   setStyle(document.body.classList.contains("normal") ? "normal" : "term");
 
+  /* ===== Thème de couleur (blanc / vert) ===== */
+  const themeBtns = document.querySelectorAll(".theme-switch button");
+  function setTheme(th) {
+    document.body.classList.toggle("green", th === "green");
+    themeBtns.forEach((b) => b.classList.toggle("active", b.dataset.theme === th));
+    try { localStorage.setItem("theme", th); } catch {}
+    document.dispatchEvent(new Event("themechange")); // les fonds animés reprennent la couleur
+  }
+  themeBtns.forEach((b) => b.addEventListener("click", () => setTheme(b.dataset.theme)));
+  setTheme(document.body.classList.contains("green") ? "green" : "white");
+
   /* ===== Profil ===== */
   $("#name").textContent = SITE.name;
   const av = $("#avatar");
@@ -1182,18 +1235,20 @@ const ICONS = {
       return li;
     }));
     load(0, false); // toujours le premier morceau de la liste au chargement
-    // Lecture automatique. Les navigateurs bloquent le son tant que le visiteur n'a pas
-    // interagi avec la page : dans ce cas on lance la musique à son premier clic / touche.
-    audio.play().catch(() => {
-      const start = (e) => {
-        if (e.target.closest?.("#player")) return stop(); // il utilise déjà le lecteur
-        if (audio.paused) audio.play().catch(() => {});
-        stop();
+    // Écran "Click to open" : ce clic autorise le navigateur à lancer la musique
+    const splash = $("#splash");
+    if (splash) {
+      const open = (e) => {
+        if (e.type === "keydown" && e.key === "Tab") return;
+        audio.play().catch(() => {});
+        splash.classList.add("hide");
+        setTimeout(() => splash.remove(), 400);
+        removeEventListener("keydown", open);
       };
-      const evs = ["pointerdown", "keydown", "touchstart"];
-      const stop = () => evs.forEach((ev) => removeEventListener(ev, start, true));
-      evs.forEach((ev) => addEventListener(ev, start, true));
-    });
+      splash.addEventListener("click", open);
+      addEventListener("keydown", open);
+      splash.focus();
+    }
   }
   playBtn.addEventListener("click", () => (audio.paused ? audio.play().catch(() => {}) : audio.pause()));
   $("#prevBtn").addEventListener("click", () => load(idx - 1, true));

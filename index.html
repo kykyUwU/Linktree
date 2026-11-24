@@ -13,7 +13,8 @@
   <link rel="stylesheet" href="/assets/css/cv.css">
 </head>
 <body class="no-anim">
-  <script>if (!matchMedia("(max-width: 860px)").matches) document.body.classList.add("nav-open"); try { if (localStorage.getItem("style") === "normal") document.body.classList.add("normal"); } catch (e) {}</script>
+  <script>if (!matchMedia("(max-width: 860px)").matches) document.body.classList.add("nav-open"); try { if (localStorage.getItem("style") === "normal") document.body.classList.add("normal"); if (localStorage.getItem("theme") === "green") document.body.classList.add("green"); } catch (e) {}</script>
+  <div id="splash" class="splash" role="button" tabindex="0"><p>Click to open</p></div>
   <canvas id="bgCanvas" aria-hidden="true"></canvas>
   <div class="bg-glow" aria-hidden="true"></div>
 
@@ -44,6 +45,15 @@
       <div class="lang-switch style-switch" role="group">
         <button data-style="term" data-i18n="style.term"></button>
         <button data-style="normal" data-i18n="style.normal"></button>
+      </div>
+    </div>
+
+    <!-- Thème -->
+    <div class="side-block">
+      <p class="side-title" data-i18n="side.theme"></p>
+      <div class="lang-switch theme-switch" role="group">
+        <button data-theme="white" data-i18n="theme.white"></button>
+        <button data-theme="green" data-i18n="theme.green"></button>
       </div>
     </div>
 

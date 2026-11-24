@@ -54,6 +54,17 @@
   styleBtns.forEach((b) => b.addEventListener("click", () => setStyle(b.dataset.style)));
   setStyle(document.body.classList.contains("normal") ? "normal" : "term");
 
+  /* ===== Thème de couleur (blanc / vert) ===== */
+  const themeBtns = document.querySelectorAll(".theme-switch button");
+  function setTheme(th) {
+    document.body.classList.toggle("green", th === "green");
+    themeBtns.forEach((b) => b.classList.toggle("active", b.dataset.theme === th));
+    try { localStorage.setItem("theme", th); } catch {}
+    document.dispatchEvent(new Event("themechange")); // les fonds animés reprennent la couleur
+  }
+  themeBtns.forEach((b) => b.addEventListener("click", () => setTheme(b.dataset.theme)));
+  setTheme(document.body.classList.contains("green") ? "green" : "white");
+
   /* ===== Profil ===== */
   $("#name").textContent = SITE.name;
   const av = $("#avatar");
@@ -127,18 +138,20 @@
       return li;
     }));
     load(0, false); // toujours le premier morceau de la liste au chargement
-    // Lecture automatique. Les navigateurs bloquent le son tant que le visiteur n'a pas
-    // interagi avec la page : dans ce cas on lance la musique à son premier clic / touche.
-    audio.play().catch(() => {
-      const start = (e) => {
-        if (e.target.closest?.("#player")) return stop(); // il utilise déjà le lecteur
-        if (audio.paused) audio.play().catch(() => {});
-        stop();
+    // Écran "Click to open" : ce clic autorise le navigateur à lancer la musique
+    const splash = $("#splash");
+    if (splash) {
+      const open = (e) => {
+        if (e.type === "keydown" && e.key === "Tab") return;
+        audio.play().catch(() => {});
+        splash.classList.add("hide");
+        setTimeout(() => splash.remove(), 400);
+        removeEventListener("keydown", open);
       };
-      const evs = ["pointerdown", "keydown", "touchstart"];
-      const stop = () => evs.forEach((ev) => removeEventListener(ev, start, true));
-      evs.forEach((ev) => addEventListener(ev, start, true));
-    });
+      splash.addEventListener("click", open);
+      addEventListener("keydown", open);
+      splash.focus();
+    }
   }
   playBtn.addEventListener("click", () => (audio.paused ? audio.play().catch(() => {}) : audio.pause()));
   $("#prevBtn").addEventListener("click", () => load(idx - 1, true));
