@@ -215,6 +215,7 @@ const SITE = {
     { name: "stggege", url: "https://stggege.com/", icon: "link" },
     { name: "squid.wtf", url: "https://squid.wtf/", icon: "link" },
     { name: "Skidrow Codex", url: "https://www.skidrowcodex.net/", icon: "link" },
+    { name: "Bonjour la fuite", url: "https://bonjourlafuite.eu.org/", icon: "link" },
   ],
 
   /* ---------- Musique (on remplira plus tard) ----------
