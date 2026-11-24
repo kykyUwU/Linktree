@@ -1,5 +1,11 @@
 /* ===== Page CV ===== */
 .cv { max-width: 920px; margin: 0 auto; }
+.cv-back {
+  display: inline-block; margin-bottom: 24px; padding: 8px 14px;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  color: var(--muted); transition: color .2s, border-color .2s, background .2s;
+}
+.cv-back:hover { color: var(--text); border-color: var(--text); background: var(--panel-2); }
 .cv-download { display: flex; justify-content: center; padding: 16px 0 8px; }
 .cv-download .btn { padding: 12px 26px; }
 
@@ -62,7 +68,7 @@
 
 /* ===== Impression : propre, noir sur blanc ===== */
 @media print {
-  #bgCanvas, .sidebar, .menu-btn, .cv-download { display: none !important; }
+  #bgCanvas, .sidebar, .menu-btn, .cv-download, .cv-back { display: none !important; }
   .content { margin: 0 !important; padding: 0 !important; }
   body { background: #fff; color: #000; }
   .cv { padding: 0; max-width: none; }
