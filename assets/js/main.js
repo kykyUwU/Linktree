@@ -101,6 +101,7 @@
   }
 
   function renderAllCards() {
+    renderCards($("#workCards"), SITE.work || []);
     renderCards($("#contactCards"), SITE.contact);
     renderCards($("#linkCards"), SITE.links);
   }

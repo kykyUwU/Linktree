@@ -11,6 +11,7 @@ const SITE = {
     fr: {
       tagline: "Biotech · Code · Science",
       "nav.me": "Moi",
+      "nav.work": "Mes projets",
       "nav.contact": "Contact",
       "nav.links": "Liens utiles",
       "side.lang": "Langue",
@@ -50,6 +51,7 @@ const SITE = {
     en: {
       tagline: "Biotech · Code · Science",
       "nav.me": "About me",
+      "nav.work": "My work",
       "nav.contact": "Contact",
       "nav.links": "Useful links",
       "side.lang": "Language",
@@ -198,9 +200,14 @@ const SITE = {
        copy: "texte" = un clic copie le texte au lieu d'ouvrir un lien */
     { name: "Email", url: "mailto:kylian.maton@protonmail.com", icon: "mail" },
     { name: { fr: "Téléphone", en: "Phone" }, sub: "+33 7 82 85 72 15", url: "tel:+33782857215", icon: "phone" },
-    { name: "GitHub", url: "https://github.com/kykyUwU", icon: "github" },
     { name: "LinkedIn", url: "https://www.linkedin.com/in/kykyuwu/", icon: "linkedin" },
     { name: "Discord", sub: "kykyuwu", copy: "kykyuwu", icon: "discord" },
+  ],
+
+  /* ---------- Mes projets ---------- */
+  work: [
+    { name: "GitHub", url: "https://github.com/kykyUwU", icon: "github" },
+    { name: { fr: "Chiralys — Wiki iGEM 2026", en: "Chiralys — iGEM 2026 wiki" }, url: "https://2026.igem.wiki/toulouse-insa-ut/", icon: "dna" },
   ],
 
   /* ---------- Liens utiles ---------- */
