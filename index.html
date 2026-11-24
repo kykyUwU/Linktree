@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>kykyUwU</title>
+  <meta name="description" content="CV, contact et liens de kykyUwU">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=VT323&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap"></noscript>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/cv.css">
+</head>
+<body class="no-anim">
+  <script>if (!matchMedia("(max-width: 860px)").matches) document.body.classList.add("nav-open"); try { if (localStorage.getItem("style") === "normal") document.body.classList.add("normal"); } catch (e) {}</script>
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <!-- Bouton menu (mobile) -->
+  <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- ===== Barre latérale ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="profile">
+      <div class="avatar" id="avatar">K</div>
+      <h1 class="name" id="name"></h1>
+    </div>
+
+    <!-- Langue -->
+    <div class="side-block">
+      <p class="side-title" data-i18n="side.lang"></p>
+      <div class="lang-switch" role="group">
+        <button data-lang="fr">FR</button>
+        <button data-lang="en">EN</button>
+      </div>
+    </div>
+
+    <!-- Style -->
+    <div class="side-block">
+      <p class="side-title" data-i18n="side.style"></p>
+      <div class="lang-switch style-switch" role="group">
+        <button data-style="term" data-i18n="style.term"></button>
+        <button data-style="normal" data-i18n="style.normal"></button>
+      </div>
+    </div>
+
+    <!-- Fond -->
+    <div class="side-block">
+      <p class="side-title" data-i18n="side.bg"></p>
+      <div class="bg-switch" role="group">
+        <button data-bg="matrix" data-i18n="bg.matrix"></button>
+        <button data-bg="life" data-i18n="bg.life"></button>
+        <button data-bg="lightning" data-i18n="bg.lightning"></button>
+        <button data-bg="neutral" data-i18n="bg.neutral"></button>
+      </div>
+    </div>
+
+    <!-- Lecteur de musique -->
+    <div class="side-block player" id="player">
+      <p class="side-title" data-i18n="side.music"></p>
+      <div class="track">
+        <div class="cover" id="cover"><div class="bars"><i></i><i></i><i></i><i></i></div></div>
+        <div class="track-info">
+          <p class="track-title" id="trackTitle"></p>
+          <p class="track-artist" id="trackArtist"></p>
+        </div>
+      </div>
+      <input type="range" id="seek" class="seek" min="0" max="1000" step="1" value="0" aria-label="Position">
+      <div class="times"><span id="tCur">0:00</span><span id="tDur">0:00</span></div>
+      <div class="controls">
+        <button id="prevBtn" aria-label="Précédent">⏮</button>
+        <button id="playBtn" class="play" aria-label="Lecture">▶</button>
+        <button id="nextBtn" aria-label="Suivant">⏭</button>
+      </div>
+      <input type="range" id="volume" min="0" max="1" step="0.01" value="0.6" aria-label="Volume">
+      <ul class="playlist" id="playlist"></ul>
+      <audio id="audio" preload="none"></audio>
+    </div>
+    <!-- offline-btn -->
+    <a class="side-dl" href="/assets/files/Kylian_Maton_offline.html" download="Kylian_Maton.html">
+      <span data-i18n="side.offline"></span><small data-i18n="side.offlineSub"></small>
+    </a>
+    <!-- /offline-btn -->
+  </aside>
+
+  <!-- ===== Contenu ===== -->
+  <main class="content">
+
+    <!-- MOI / CV -->
+    <section id="moi" class="section">
+      <h2 class="section-title"><span data-i18n="nav.me"></span></h2>
+
+      <div class="cards">
+        <a class="card card-cv" href="/cv/">
+          <div class="card-ico" data-icon="cv"></div>
+          <div class="card-txt">
+            <p class="card-name" data-i18n="cv.open"></p>
+            <p class="card-sub" data-i18n="cv.openSub"></p>
+          </div>
+          <span class="card-arrow">→</span>
+        </a>
+        <a class="card" href="https://2026.igem.wiki/toulouse-insa-ut/" target="_blank" rel="noopener">
+          <div class="card-ico" data-icon="dna"></div>
+          <div class="card-txt">
+            <p class="card-name" data-i18n="igem.name"></p>
+            <p class="card-sub">2026.igem.wiki/toulouse-insa-ut</p>
+          </div>
+          <span class="card-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <h2 class="section-title"><span data-i18n="nav.contact"></span></h2>
+      <div class="cards" id="contactCards"></div>
+    </section>
+
+    <!-- LIENS UTILES -->
+    <section id="liens" class="section">
+      <h2 class="section-title"><span data-i18n="nav.links"></span></h2>
+      <div class="cards" id="linkCards"></div>
+    </section>
+
+    <footer class="footer">© <span id="year"></span> kykyUwU</footer>
+  </main>
+
+  <script defer src="/assets/js/data.js"></script>
+  <script defer src="/assets/js/icons.js"></script>
+  <script defer src="/assets/js/bg.js"></script>
+  <script defer src="/assets/js/cv.js"></script>
+  <script defer src="/assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV — Kylian Maton</title>
+  <meta name="description" content="CV interactif de Kylian Maton">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=VT323&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap"></noscript>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/cv.css">
+</head>
+<body class="cv-page no-anim">
+  <script>if (!matchMedia("(max-width: 860px)").matches) document.body.classList.add("nav-open"); try { if (localStorage.getItem("style") === "normal") document.body.classList.add("normal"); } catch (e) {}</script>
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+
+  <!-- Bouton menu (mobile) -->
+  <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- ===== Barre latérale ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="profile">
+      <div class="avatar" id="avatar">K</div>
+      <h1 class="name" id="name"></h1>
+    </div>
+
+    <!-- Langue -->
+    <div class="side-block">
+      <p class="side-title" data-i18n="side.lang"></p>
+      <div class="lang-switch" role="group">
+        <button data-lang="fr">FR</button>
+        <button data-lang="en">EN</button>
+      </div>
+    </div>
+
+    <!-- Style -->
+    <div class="side-block">
+      <p class="side-title" data-i18n="side.style"></p>
+      <div class="lang-switch style-switch" role="group">
+        <button data-style="term" data-i18n="style.term"></button>
+        <button data-style="normal" data-i18n="style.normal"></button>
+      </div>
+    </div>
+
+    <!-- Fond -->
+    <div class="side-block">
+      <p class="side-title" data-i18n="side.bg"></p>
+      <div class="bg-switch" role="group">
+        <button data-bg="matrix" data-i18n="bg.matrix"></button>
+        <button data-bg="life" data-i18n="bg.life"></button>
+        <button data-bg="lightning" data-i18n="bg.lightning"></button>
+        <button data-bg="neutral" data-i18n="bg.neutral"></button>
+      </div>
+    </div>
+
+    <!-- Lecteur de musique -->
+    <div class="side-block player" id="player">
+      <p class="side-title" data-i18n="side.music"></p>
+      <div class="track">
+        <div class="cover" id="cover"><div class="bars"><i></i><i></i><i></i><i></i></div></div>
+        <div class="track-info">
+          <p class="track-title" id="trackTitle"></p>
+          <p class="track-artist" id="trackArtist"></p>
+        </div>
+      </div>
+      <input type="range" id="seek" class="seek" min="0" max="1000" step="1" value="0" aria-label="Position">
+      <div class="times"><span id="tCur">0:00</span><span id="tDur">0:00</span></div>
+      <div class="controls">
+        <button id="prevBtn" aria-label="Précédent">⏮</button>
+        <button id="playBtn" class="play" aria-label="Lecture">▶</button>
+        <button id="nextBtn" aria-label="Suivant">⏭</button>
+      </div>
+      <input type="range" id="volume" min="0" max="1" step="0.01" value="0.6" aria-label="Volume">
+      <ul class="playlist" id="playlist"></ul>
+      <audio id="audio" preload="none"></audio>
+    </div>
+    <!-- offline-btn -->
+    <a class="side-dl" href="/assets/files/Kylian_Maton_offline.html" download="Kylian_Maton.html">
+      <span data-i18n="side.offline"></span><small data-i18n="side.offlineSub"></small>
+    </a>
+    <!-- /offline-btn -->
+  </aside>
+
+  <main class="content">
+   <div class="cv">
+    <section class="cv-hero reveal">
+      <div class="avatar" id="cvAvatar"></div>
+      <div>
+        <h1 class="cv-name" id="cvName"></h1>
+        <p class="cv-title" id="cvTitle"></p>
+        <div class="cv-facts" id="cvFacts"></div>
+      </div>
+    </section>
+
+    <section class="cv-block reveal">
+      <h2 class="cv-h" data-i18n="cv.summary"></h2>
+      <p class="cv-summary" id="cvSummary"></p>
+    </section>
+
+    <section class="cv-block reveal">
+      <h2 class="cv-h" data-i18n="cv.experience"></h2>
+      <ol class="timeline" id="tlExperience"></ol>
+    </section>
+
+    <section class="cv-block reveal">
+      <h2 class="cv-h" data-i18n="cv.education"></h2>
+      <ol class="timeline" id="tlEducation"></ol>
+    </section>
+
+    <div class="cv-grid">
+      <section class="cv-block reveal">
+        <h2 class="cv-h" data-i18n="cv.skills"></h2>
+        <div class="cv-skills" id="skills"></div>
+      </section>
+
+      <div>
+        <section class="cv-block reveal">
+          <h2 class="cv-h" data-i18n="cv.languages"></h2>
+          <div id="languages"></div>
+        </section>
+        <section class="cv-block reveal">
+          <h2 class="cv-h" data-i18n="cv.interests"></h2>
+          <div class="cv-interests" id="interests"></div>
+        </section>
+      </div>
+    </div>
+      <div class="cv-download reveal">
+        <a class="btn" id="cvDownload" href="/assets/files/CV.pdf" download="CV_Kylian_Maton.pdf" data-i18n="cv.download"></a>
+      </div>
+   </div>
+  </main>
+
+  <script defer src="/assets/js/data.js"></script>
+  <script defer src="/assets/js/icons.js"></script>
+  <script defer src="/assets/js/bg.js"></script>
+  <script defer src="/assets/js/cv.js"></script>
+  <script defer src="/assets/js/main.js"></script>
+</body>
+</html>

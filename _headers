@@ -1,0 +1,10 @@
+# Cache Cloudflare Pages
+/assets/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/assets/files/*
+  Cache-Control: public, max-age=86400
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
