@@ -127,6 +127,18 @@
       return li;
     }));
     load(0, false); // toujours le premier morceau de la liste au chargement
+    // Lecture automatique. Les navigateurs bloquent le son tant que le visiteur n'a pas
+    // interagi avec la page : dans ce cas on lance la musique à son premier clic / touche.
+    audio.play().catch(() => {
+      const start = (e) => {
+        if (e.target.closest?.("#player")) return stop(); // il utilise déjà le lecteur
+        if (audio.paused) audio.play().catch(() => {});
+        stop();
+      };
+      const evs = ["pointerdown", "keydown", "touchstart"];
+      const stop = () => evs.forEach((ev) => removeEventListener(ev, start, true));
+      evs.forEach((ev) => addEventListener(ev, start, true));
+    });
   }
   playBtn.addEventListener("click", () => (audio.paused ? audio.play().catch(() => {}) : audio.pause()));
   $("#prevBtn").addEventListener("click", () => load(idx - 1, true));
