@@ -7,6 +7,7 @@ Usage (depuis le dossier Linktree) :
     python3 tools/build_offline.py
 
 À relancer après chaque modification du contenu, avant de pousser sur GitHub.
+Met aussi à jour les numéros de version (?v=...) des CSS/JS dans les pages.
 """
 import base64
 import json
@@ -38,6 +39,19 @@ def title_of(html):
     return re.search(r"<title>(.*?)</title>", html, re.S).group(1)
 
 
+# --- Versionne CSS/JS (?v=empreinte) : les navigateurs prennent la nouvelle version tout de suite ---
+import hashlib
+def stamp(html):
+    def rep(m):
+        path = m.group(2)
+        h = hashlib.md5((ROOT / path.lstrip("/")).read_bytes()).hexdigest()[:8]
+        return f'{m.group(1)}{path}?v={h}"'
+    return re.sub(r'((?:src|href)=")(/assets/(?:js|css)/[^"?]+)(?:\?v=[0-9a-f]+)?"', rep, html)
+
+for page in ["index.html", "cv/index.html"]:
+    f = ROOT / page
+    f.write_text(stamp(f.read_text(encoding="utf-8")), encoding="utf-8")
+
 home = read("index.html")
 cv = read("cv/index.html")
 
@@ -64,10 +78,10 @@ out = re.sub(r"\s*<!-- Cloudflare Web Analytics -->.*?<!-- End Cloudflare Web An
 # CSS en ligne
 def inline_css(m):
     return "<style>\n" + read(m.group(1).lstrip("/")) + "\n</style>"
-out = re.sub(r'<link rel="stylesheet" href="(/assets/css/[^"]+)">', inline_css, out)
+out = re.sub(r'<link rel="stylesheet" href="(/assets/css/[^"?]+)(?:\?v=[0-9a-f]+)?">', inline_css, out)
 
 # Scripts en ligne (dans le même ordre), précédés des données hors ligne
-scripts = re.findall(r'<script defer src="(/assets/js/[^"]+)"></script>', out)
+scripts = re.findall(r'<script defer src="(/assets/js/[^"?]+)(?:\?v=[0-9a-f]+)?"></script>', out)
 out = re.sub(r'\s*<script defer src="/assets/js/[^"]+"></script>', "", out)
 payload = json.dumps(offline, ensure_ascii=False).replace("</", "<\\/")
 inline = "<script>window.OFFLINE = " + payload + ";</script>\n"
